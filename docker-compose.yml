@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  net-creds:
+    build:
+      context: .
+    security_opt:
+      - no-new-privileges:true
+    image: net-creds-analizer:${NET_CREDS_VERSION}
+    # Does not scale containers with container_name
+    # container_name: net-creds-analizer
+    hostname: net-creds
+    scale: 1
+    volumes:
+      # Share the created config file from init container
+      - ${PCAP_FILE_PATH}:/mnt/net-creds/net-creds.pcap
+    # Never loads image
+    pull_policy: "never"
+    # Disables the network
+    network_mode: "none"
+    # Never restarts a container when stopped
+    restart: "no"
