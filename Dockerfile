@@ -1,51 +1,28 @@
-ARG UBUNTU_VERSION=16.04
-FROM ubuntu:$UBUNTU_VERSION
+FROM  dh-mirror.gitverse.ru/python:2.7.18-slim-buster AS builder
 
-ARG PYTHON_VERSION=2.7.9
+WORKDIR /opt/net-creds
 
-# Install dependencies
 RUN \
-        apt-get update && \
-        apt-get install -y \
-        unzip \
-        git \
-        wget \
-        gcc \
-        make \
-        openssl \
-        libffi-dev \
-        libgdbm-dev \
-        libsqlite3-devn \
-        libssl-dev \
-        zlib1g-dev && \
-        apt-get clean
+        python2 -m pip install virtualenv && \
+        python2 -m virtualenv /opt/venv
 
-# Build Python from source
-WORKDIR /tmp/
+COPY requirements.txt .
+
+RUN /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+
+FROM dh-mirror.gitverse.ru/python:2.7.18-slim-buster AS runner
+
 RUN \
-       wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz && \
-       tar --extract -f Python-$PYTHON_VERSION.tgz && \
-       cd ./Python-$PYTHON_VERSION/ && \
-       ./configure --with-ensurepip=install --enable-optimizations --prefix=/usr/local && \
-       make && \
-       make install && \
-       cd ../ && \
-       rm -r ./Python-$PYTHON_VERSION*
+        addgroup --system net-creds && \
+        adduser --system --no-create-home --group net-creds
 
-# Build scapy from source
-WORKDIR /tmp/
-RUN \
-        wget --trust-server-names https://github.com/secdev/scapy/archive/master.zip && \
-        unzip master && \
-        cd ./scapy-master && \
-        python setup.py install && \
-        cd .. && \
-        rm -r master scapy-master
+WORKDIR /opt/net-creds
 
-# install requirement for net-creds
-RUN pip install wsgiref
+COPY --chown=net-creds:net-creds --chmod=700 --from=builder \
+        /opt/venv /opt/venv
 
-# clone into net-creds
-WORKDIR /app
-RUN git clone https://github.com/DanMcInerney/net-creds
-WORKDIR /app/net-creds
+COPY --chown=net-creds:net-creds --chmod=700  net-creds.py ./
+
+ENTRYPOINT [ "/opt/venv/bin/python2 ", "net-creds.py", "-p" ]
+CMD [ "/mnt/net-creds/pcap.pcap" ]
