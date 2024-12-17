@@ -982,8 +982,8 @@ def main(args):
 
     else:
         # Check for root
-        if geteuid():
-            exit('[-] Please run as root')
+        # if geteuid():
+        #     exit('[-] Please run as root')
 
         #Find the active interface
         if args.interface:
