@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-from os import geteuid, devnull
+from os import devnull
 import logging
 # shut up scapy
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
