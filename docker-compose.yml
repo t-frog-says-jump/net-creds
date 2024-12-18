@@ -7,8 +7,6 @@ services:
     security_opt:
       - no-new-privileges:true
     image: net-creds-analizer:${NET_CREDS_VERSION}
-    # Does not scale containers with container_name
-    container_name: net-creds-analizer
     hostname: net-creds
     scale: 1
     environment:
