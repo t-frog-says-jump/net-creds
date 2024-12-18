@@ -29,13 +29,3 @@ Stop or free up resources:
 ```bash
 docker-compose down
 ```
-
-Delete ALL container:
-```bash
-docker container prune -f
-```
-
-Delete ALL volumes:
-```bash
-docker volume prune -f
-```
