@@ -29,3 +29,11 @@ Stop or free up resources:
 ```bash
 docker-compose down
 ```
+
+## Bug fix
+
+If you get an input/output error, see [Note](#Note)
+
+![Net-docker-cred Visualization](./images/Import-error.png)
+
+
