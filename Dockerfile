@@ -21,6 +21,6 @@ COPY \
 
 COPY --chown=net-creds:net-creds --chmod=700  net-creds.py ./
 
-USER net-creds
+# USER net-creds
 
 ENTRYPOINT [ "/opt/venv/bin/python", "net-creds.py", "--pcap", "/mnt/net-creds/net-creds.pcap" ]
