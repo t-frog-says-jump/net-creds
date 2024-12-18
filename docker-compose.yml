@@ -11,9 +11,13 @@ services:
     container_name: net-creds-analizer
     hostname: net-creds
     scale: 1
+    environment:
+      # Path in container to net-cred logging
+      - CREADENTIALS_FILE_PATH=/var/log/net-creds/credentials.txt
     volumes:
       # Share the created config file from init container
       - ${PCAP_FILE_PATH}:/mnt/net-creds/net-creds.pcap:ro
+      - ./log:/var/log/net-creds
     # Never loads image
     pull_policy: "never"
     # Disables the network

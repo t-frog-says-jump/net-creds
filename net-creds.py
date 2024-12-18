@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-from os import devnull
+from os import devnull, getenv
 import logging
 # shut up scapy
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
@@ -34,7 +34,9 @@ from urllib import unquote
 #     Laurent Gaffie
 #     psychomario
 
-logging.basicConfig(filename='credentials.txt',level=logging.INFO)
+CREADENTIALS_FILE_PATH = getenv("CREADENTIALS_FILE_PATH", "./credentials.txt")
+
+logging.basicConfig(filename=CREADENTIALS_FILE_PATH,level=logging.INFO)
 DN = open(devnull, 'w')
 pkt_frag_loads = OrderedDict()
 challenge_acks = OrderedDict()
@@ -942,8 +944,8 @@ def printer(src_ip_port, dst_ip_port, msg):
         skip = ['Searched ', 'POST load:']
         for s in skip:
             if s not in msg:
-                if os.path.isfile('credentials.txt'):
-                    with open('credentials.txt', 'r') as log:
+                if os.path.isfile(CREADENTIALS_FILE_PATH):
+                    with open(CREADENTIALS_FILE_PATH, 'r') as log:
                         contents = log.read()
                         if msg in contents:
                             return
